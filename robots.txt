@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saba-ms.netlify.app/sitemap.xml
