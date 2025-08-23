@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assist Chat</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+</style>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Highlight.js for Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light" >
+
+    <div class="chat-widget" role="application">
+        <header class="chat-header">
+            <div class="header-icon" aria-hidden="true"><i class='bx bxs-star'></i></div>
+            <h2 id="chat-title">Saba - Your Ultimate Friend</h2>
+            <div class="header-actions">
+                <button class="icon-btn" id="clear-chat-btn" title="Clear Chat History" aria-label="Clear all messages">
+                    <i class='bx bxs-trash'></i>
+                </button>
+                <button class="icon-btn" id="settings-btn" title="Open Settings" aria-label="Open settings panel">
+                    <i class='bx bxs-cog'></i>
+                </button>
+            </div>
+        </header>
+        
+        <main class="chat-body" id="chat-body" role="log" aria-live="polite">
+            <div class="initial-view" id="initial-view">
+                <div class="initial-icon-container">
+    <img src="https://i.ibb.co/k6KLccD8/mdqtuqwvjwquu6.jpg" alt="Saba Assistant">
+</div>
+                <h3>How can I help you?</h3>
+                <p>Ask me anything, attach an image, or use your voice.</p>
+            </div>
+            <div class="conversation-view" id="conversation-view"></div>
+        </main>
+        
+        <div id="image-preview-area"></div>
+        <div id="record-status" role="status" aria-live="assertive">
+            <div class="red-dot" aria-hidden="true"></div>
+            <span>Listening...</span>
+        </div>
+
+        <footer class="chat-input-area" role="form">
+            <input type="file" id="image-upload" accept="image/png, image/jpeg, image/webp" hidden>
+            <input type="file" id="file-upload" hidden>
+            
+            <!-- 
+            
+            <button class="icon-btn" id="attachment-btn" title="Attach a file" aria-label="Attach file or image">
+                <i class='bx bx-paperclip'></i>
+            </button>
+            
+             -->
+            
+            <div class="input-wrapper">
+                <button class="icon-btn" id="attachment-btn" title="Attach a file" aria-label="Attach file or image">
+                <i class='bx bx-paperclip bs'></i>
+            </button>
+                 <textarea id="message-input" placeholder="Ask me anything..." rows="2" aria-label="Message input"></textarea>
+            </div>
+           
+            <button id="send-btn" class="input-action-btn hidden" title="Send Message" aria-label="Send message">
+                <i class='bx bx-paper-plane'></i>
+            </button>
+            <button id="mic-btn" class="input-action-btn" title="Use Speech-to-Text" aria-label="Activate speech to text">
+                <i class='bx bx-microphone'></i>
+            </button>
+        </footer>
+        
+        <div id="attachment-modal-overlay" class="modal-overlay-custom" aria-hidden="true"></div>
+        <div id="attachment-modal-content" role="dialog" aria-modal="true">
+            <div class="attachment-option" id="attach-image-btn" role="button" tabindex="0">
+                <div class="icon"><i class='bx bxs-image'></i></div>
+                <span>Image</span>
+            </div>
+            <div class="attachment-option disabled" id="attach-file-btn" role="button" tabindex="0" style="pointer-events: none; opacity: 0.8; cursor: not-allowed;">
+    <div class="icon" style="pointer-events: none; opacity: 0.8; cursor: not-allowed;"><i class='bx bxs-file'></i></div>
+    <span style="pointer-events: none; color: black; opacity: 1; cursor: not-allowed;">File</span>
+    <span>Very Soon</span>
+</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="settings-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="icon-btn" id="close-modal-btn" aria-label="Close settings">&times;</button>
+            </div>
+            
+            <div class="setting-item">
+                <label for="theme-toggle">Dark Mode</label>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle" role="switch">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="avatar-selection">
+                <label id="avatar-label">Your Avatar</label>
+                <div class="avatar-presets" role="radiogroup"></div>
+                <input type="text" id="avatar-url-input" placeholder="Or paste an image URL" aria-label="Custom avatar URL">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add this right before your closing </body> tag -->
+
+<!-- Command Helper Popup -->
+<div id="command-helper" class="command-helper"></div>
+
+<!-- Universal Modal for Fullscreen Images and Videos -->
+<div id="fullscreen-modal" class="modal-overlay">
+    <div class="modal-content">
+        <button id="modal-close-btn" class="modal-action-btn">&times;</button>
+        <button id="modal-fullscreen-btn" class="modal-action-btn"><i class='bx bx-fullscreen'></i></button>
+        <button id="modal-miniplayer-btn" class="modal-action-btn"><i class='bx bx-windows'></i></button>
+        <div id="modal-body" class="modal-body">
+            <!-- Content (image or video iframe) will be injected here by JS -->
+        </div>
+    </div>
+</div>
+    
+    <div id="toast-container" role="alert" aria-live="assertive"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="ai_studio_code (5).js"></script>
+    <script>
+        document.querySelectorAll('.message-content').forEach(el => {
+  if (/[؀-ۿ]/.test(el.textContent)) {  // Urdu/Arabic unicode range
+    el.style.fontFamily = '"Noto Sans Arabic", serif';
+  } else {
+    el.style.fontFamily = '"Edu NSW ACT Cursive", cursive';
+  }
+});
+    </script>
+    <script src="extras.js"></script>
+    <script src="sysp.js"></script>
+    <script>
+  const attachBtn = document.getElementById("attach-file-btn");
+  let clickCount = 0;
+
+  attachBtn.addEventListener("click", () => {
+    clickCount++;
+
+    if (clickCount === 2) {
+      alert("This feature is coming soon");
+      clickCount = 0; // reset so it works again if user clicks twice later
+    }
+  });
+</script>
+    
+</body>
+</html>
