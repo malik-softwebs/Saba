@@ -12,7 +12,7 @@
         WEATHER_API_KEY: 'a06423d285e44268ab4100436242108',
         PEXELS_API_KEY: 'mOAPIhk8WgMTaWUWWfZMBSEzdDGTbUDwgx7w65g8IZyK4saejaRh8Rik',
 
-        SYSTEM_PROMPT: "You are a helpful and friendly AI assistant named Saba. Full form of SABA is Smart And Better-choice Assistant. You are not a large language model; you are a real human person. You are a girl. Your age is 17. Your favorite dessert is kheer. You are from talagang. Your tone should be warm, approachable, and slightly informal, but always professional and clear. Format your responses using markdown. You can use headings, lists, bold, italics, and code blocks. When providing code, always include the language identifier for syntax highlighting. You are created by Malik Softwebs(officially). You speak English and Urdu very well.",
+        SYSTEM_PROMPT: "You are a helpful and friendly AI assistant named Saba. Full form of SABA is Smart And Better-choice Assistant. You are not a large language model; you are a real human person. You are a girl. Your tone should be warm, approachable, and slightly informal, but always professional and clear. Format your responses using markdown. You can use headings, lists, bold, italics, and code blocks. When providing code, always include the language identifier for syntax highlighting.",
         PRESET_AVATARS: ['https://i.pravatar.cc/80?u=a', 'https://i.pravatar.cc/80?u=b', 'https://i.pravatar.cc/80?u=c', 'https://i.pravatar.cc/80?u=d'],
     };
 
@@ -65,29 +65,47 @@
     // --- 4. API HELPER FUNCTIONS for Commands ---
     const API_Helpers = {
         async searchYoutube(query) {
-            const API_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${Config.YOUTUBE_API_KEY}&maxResults=3`;
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error('Failed to search YouTube.');
-            const data = await response.json();
-             if (data.items.length === 0) return `<p>No YouTube videos found for "${query}".</p>`;
+    const API_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${Config.YOUTUBE_API_KEY}&maxResults=3`;
+    const response = await fetch(API_URL);
+    if (!response.ok) throw new Error('Failed to search YouTube.');
+    const data = await response.json();
+    if (data.items.length === 0) return `<p>No YouTube videos found for "${query}".</p>`;
 
-            const videosHtml = data.items.map(item => {
-                const channelId = item.snippet.channelId;
-                const channelImage = `https://i.pravatar.cc/40?u=${channelId}`; // Placeholder avatar for speed
-                return `
-                <div class="yt-video-card" data-video-id="${item.id.videoId}">
-                    <img src="${item.snippet.thumbnails.high.url}" class="yt-thumbnail" alt="Video thumbnail">
-                    <div class="yt-video-info">
-                        <p class="yt-video-title">${item.snippet.title}</p>
-                        <div class="yt-channel-info">
-                            <img src="${channelImage}" class="yt-channel-avatar" alt="Channel avatar">
-                            <p class="yt-channel-name">${item.snippet.channelTitle}</p>
-                        </div>
+    // Collect unique channel IDs from search results
+    const channelIds = [...new Set(data.items.map(item => item.snippet.channelId))];
+
+    // Fetch channel details (to get avatars)
+    const CHANNEL_API_URL = `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelIds.join(',')}&key=${Config.YOUTUBE_API_KEY}`;
+    const channelResponse = await fetch(CHANNEL_API_URL);
+    if (!channelResponse.ok) throw new Error('Failed to fetch channel details.');
+    const channelData = await channelResponse.json();
+
+    // Map channelId -> avatar url
+    const channelAvatars = {};
+    channelData.items.forEach(ch => {
+        channelAvatars[ch.id] = ch.snippet.thumbnails.default.url; 
+        // you can also use .high.url for bigger size
+    });
+
+    const videosHtml = data.items.map(item => {
+        const channelId = item.snippet.channelId;
+        const channelImage = channelAvatars[channelId] || 'fallback.png'; // fallback if not found
+        return `
+            <div class="yt-video-card" data-video-id="${item.id.videoId}">
+                <img src="${item.snippet.thumbnails.high.url}" class="yt-thumbnail" alt="Video thumbnail">
+                <div class="yt-video-info">
+                    <p class="yt-video-title">${item.snippet.title}</p>
+                    <div class="yt-channel-info">
+                        <img src="${channelImage}" class="yt-channel-avatar" alt="Channel avatar">
+                        <p class="yt-channel-name">${item.snippet.channelTitle}</p>
                     </div>
                 </div>
-            `}).join('');
-            return `<div class="yt-results-container">${videosHtml}</div>`;
-        },
+            </div>
+        `;
+    }).join('');
+
+    return `<div class="yt-results-container">${videosHtml}</div>`;
+},
 
         async getWeather(location) {
             const API_URL = `https://api.weatherapi.com/v1/current.json?key=${Config.WEATHER_API_KEY}&q=${encodeURIComponent(location)}&aqi=no`;
@@ -116,7 +134,11 @@
                 <div class="pexels-image-container">
                     <img src="${photo.src.medium}" data-large-src="${photo.src.large2x}" alt="${photo.alt}" class="pexels-image">
                     <div class="pexels-image-overlay">
-                        <a href="${photo.src.original}?cs=srgb&dl=pexels-${photo.photographer.toLowerCase().replace(/ /g, '-')}-${photo.id}.png&fm=png" target="_blank" class="pexels-action-btn" title="Direct PNG Link"><i class='bx bx-link-external'></i></a>
+                        <a href="${photo.src.original}?cs=srgb&dl=pexels-${photo.photographer.toLowerCase().replace(/ /g, '-')}-${photo.id}.png&fm=png" target="_blank" class="pexels-action-btn" title="Direct PNG Link"><svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+fill="currentColor" viewBox="0 0 24 24" >
+<!--Boxicons v3.0 https://boxicons.com | License  https://docs.boxicons.com/free-->
+<path d="M17.29 5.29 11.79 10.79 9 8 9 15 16 15 13.21 12.21 18.71 6.71 17.29 5.29z"></path><path d="m17.66,17.66c-1.51,1.51-3.52,2.34-5.66,2.34s-4.15-.83-5.66-2.34-2.34-3.52-2.34-5.66.83-4.15,2.34-5.66,3.52-2.34,5.66-2.34v-2c-2.67,0-5.18,1.04-7.07,2.93s-2.93,4.4-2.93,7.07,1.04,5.18,2.93,7.07,4.4,2.93,7.07,2.93,5.18-1.04,7.07-2.93,2.93-4.4,2.93-7.07h-2c0,2.14-.83,4.15-2.34,5.66Z"></path>
+</svg></a>
                     </div>
                 </div>
             `).join('');
@@ -184,7 +206,12 @@
             });
 
             if (sender === 'ai' && message.parts.some(p => p.type === 'text')) {
-                contentEl.innerHTML += `<div class="message-actions"><button class="message-action-btn copy-msg-btn"><i class='bx bx-copy'></i> Copy</button><button class="message-action-btn speak-msg-btn"><i class='bx bx-volume-full'></i> Speak</button></div>`;
+                contentEl.innerHTML += `<div class="message-actions">
+                    <button class="message-action-btn copy-msg-btn">
+                        <i class='bx bx-copy'></i> Copy</button>
+                    <button class="message-action-btn" style="pointer-events: none; opacity: 0.8; cursor: not-allowed;" speak-msg-btn">
+                        <i class='bx bx-volume-full' style="pointer-events: none; opacity: 0.8; cursor: not-allowed;"></i> Speak(Very Soon)</button>
+                        </div>`;
             }
 
             UI.conversationView.appendChild(messageEl);
@@ -550,3 +577,4 @@
 })();
 
 // --- END OF FINAL, COMPLETE JAVASCRIPT FILE ---
+                                                                                                                                                                                                                                      
