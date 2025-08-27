@@ -36,10 +36,10 @@
             <h2 id="chat-title">Saba - Your Ultimate Friend</h2>
             <div class="header-actions">
                 <button class="icon-btn" id="clear-chat-btn" title="Clear Chat History" aria-label="Clear all messages">
-                    <i class='bx bx-trash'></i>
+                    <i class='bx bxs-trash'></i>
                 </button>
                 <button class="icon-btn" id="settings-btn" title="Open Settings" aria-label="Open settings panel">
-                    <i class='bx bx-cog'></i>
+                    <i class='bx bxs-cog'></i>
                 </button>
             </div>
         </header>
@@ -117,7 +117,11 @@
                 </label>
             </div>
             
-            
+            <div class="avatar-selection">
+                <label id="avatar-label">Your Avatar</label>
+                <div class="avatar-presets" role="radiogroup"></div>
+                <input type="text" id="avatar-url-input" placeholder="Or paste an image URL" aria-label="Custom avatar URL">
+            </div>
         </div>
     </div>
     
@@ -168,6 +172,7 @@
   });
 </script>
     <script>document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.stopImmediatePropagation(); document.getElementById('message-input').dispatchEvent(new Event('input')); } }, true);</script>
+    
  </body>
 </html>
         
