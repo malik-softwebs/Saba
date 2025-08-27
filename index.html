@@ -167,7 +167,7 @@
     }
   });
 </script>
-    <script>document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.stopImmediatePropagation(); } }, true);</script>
+    <script>document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.stopImmediatePropagation(); document.getElementById('message-input').dispatchEvent(new Event('input')); } }, true);</script>
  </body>
 </html>
         
