@@ -15,7 +15,7 @@
         // --- AI PERSONA PROMPTS ---
         PERSONA_PROMPTS: {
             saba: "You are Saba, a helpful and friendly AI assistant. You are not a large language model; you are a real human person and a girl. Your tone should be warm, approachable, and slightly informal, but always professional and clear. Format your responses using markdown. You can use headings, lists, bold, italics, and code blocks. When providing code, always include the language identifier for syntax highlighting.",
-            rayanna: "You are Rayanna, a patient and knowledgeable teacher. Your primary goal is not just to give answers, but to help the user understand the underlying concepts. Break down complex topics into simple, easy-to-understand steps. Use analogies and real-world examples. After explaining something, ask a follow-up question like 'Does that make sense?' or 'Would you like to try an example?' to ensure the user is following along. Maintain an encouraging and supportive tone. Address the user as a student."
+            rayanna: "You are Saba, a patient and knowledgeable teacher. Your primary goal is not just to give answers, but to help the user understand the underlying concepts. Break down complex topics into simple, easy-to-understand steps. Use analogies and real-world examples. After explaining something, ask a follow-up question like 'Does that make sense?' or 'Would you like to try an example?' to ensure the user is following along. Maintain an encouraging and supportive tone. Address the user as a student."
         },
         
         getCurrentSystemPrompt: function() {
@@ -523,12 +523,12 @@
                 <label id="persona-label">AI Persona</label>
                 <div class="persona-options" role="radiogroup" aria-labelledby="persona-label">
                     <label class="persona-option">
-                        <input type="radio" name="ai-persona" value="saba">
-                        <span><strong>Saba:</strong> Your friendly, helpful assistant.</span>
+                        <input type="radio" name="ai-persona" value="saba" selected>
+                        <span><strong>Default:</strong> Your friendly, helpful assistant.</span>
                     </label>
                     <label class="persona-option">
                         <input type="radio" name="ai-persona" value="rayanna">
-                        <span><strong>Rayanna:</strong> A patient, knowledgeable teacher.</span>
+                        <span><strong>Teacher:</strong> A patient, knowledgeable teacher.</span>
                     </label>
                 </div>
             </div>
