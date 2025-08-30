@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Gen-Img</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg-color: #ffffff;
+            --text-color: #1c1d21;
+            --secondary-text-color: #65676b;
+            --border-color: #e4e6eb;
+            --accent-color: #007aff;
+            --font-family: 'Inter', sans-serif;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+        }
+        
+        body[data-theme="dark"] {
+            --bg-color: #18191a;
+            --card-bg-color: #242526;
+            --text-color: #e4e6eb;
+            --secondary-text-color: #b0b3b8;
+            --border-color: #3e4042;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+
+        html { background-color: var(--bg-color); }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-family); color: var(--text-color);
+            background-color: var(--bg-color);
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+        
+        .app-shell {
+            width: 100%; height: 100%; max-width: 420px; max-height: 896px;
+            display: flex; flex-direction: column;
+            background-color: var(--card-bg-color);
+            border-radius: 2.5rem; overflow: hidden;
+            box-shadow: 0 10px 50px var(--shadow-color);
+            position: relative;
+        }
+
+        .screen {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .screen:not(.active) {
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        .app-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.25rem; flex-shrink: 0; z-index: 10;
+        }
+        .app-header .icon-btn, .app-header .back-link { font-size: 1.5rem; color: var(--text-color); text-decoration: none; }
+        .app-header h2 { font-size: 1.1rem; font-weight: 600; }
+        .header-actions { display: flex; gap: 1rem; }
+        .icon-btn { background: none; border: none; cursor: pointer; padding: 0; }
+
+        .app-content {
+            flex-grow: 1; overflow-y: auto; padding: 0 1.25rem 1.25rem 1.25rem;
+        }
+
+        .prompt-card {
+            background-color: var(--card-bg-color); border: 1px solid var(--border-color);
+            border-radius: 1rem; padding: 1rem; position: relative;
+            box-shadow: 0 4px 15px var(--shadow-color); margin-bottom: 1.5rem;
+        }
+        #prompt-textarea {
+            width: 100%; background: none; border: none; resize: none;
+            font-family: inherit; font-size: 1rem; color: var(--text-color);
+            min-height: 80px; padding-right: 2.5rem;
+        }
+        #prompt-textarea:focus { outline: none; }
+        #shuffle-btn {
+            position: absolute; top: 1rem; right: 1rem; font-size: 1.25rem;
+            color: var(--secondary-text-color);
+        }
+        .prompt-actions {
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-color); margin-top: 0.5rem;
+            padding-top: 0.75rem;
+        }
+        .prompt-options { display: flex; gap: 0.5rem; }
+        .prompt-options select {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-color: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: 99px; padding: 0.4rem 0.8rem;
+            font-size: 0.8rem; font-weight: 500; color: var(--text-color);
+        }
+        #send-btn {
+            background-color: var(--accent-color); color: white;
+            width: 2.75rem; height: 2.75rem; border-radius: 50%;
+            font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+        }
+        #send-btn:disabled { background-color: var(--secondary-text-color); cursor: not-allowed; }
+
+        .gallery { display: flex; flex-direction: column-reverse; gap: 1.5rem; }
+        .generation-block { animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .gallery-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .gallery-item {
+            border-radius: 1rem; background-color: var(--border-color);
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        .gallery-item:hover { transform: scale(1.03); }
+        .gallery-item.full-width { flex-basis: 100%; aspect-ratio: 1 / 1; }
+        .gallery-item.half-width { flex-basis: calc(50% - 0.5rem); aspect-ratio: 1 / 1; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        .skeleton-loader {
+            width: 100%; height: 100%;
+            background: linear-gradient(100deg, var(--bg-color) 30%, var(--card-bg-color) 50%, var(--bg-color) 70%);
+            background-size: 400% 100%; animation: shimmer 1.5s infinite linear;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* --- LIGHTBOX SCREEN --- */
+        #lightbox-screen {
+            background-color: var(--card-bg-color);
+            justify-content: space-between;
+            transform: translateY(100%);
+        }
+        #lightbox-screen.active { transform: translateY(0); opacity: 1; visibility: visible; }
+        .lightbox-preview {
+            flex-grow: 1; display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        .lightbox-preview-content {
+            width: 100%; height: 100%; border-radius: 1rem;
+            background-color: var(--bg-color);
+            position: relative; overflow: hidden;
+        }
+        .lightbox-preview-content img { width: 100%; height: 100%; object-fit: contain; }
+        .lightbox-actions {
+            padding: 1rem 1.25rem 1.5rem 1.25rem;
+            display: grid; grid-template-columns: 1fr 1fr;
+            grid-template-areas: "get save" "copy copy";
+            gap: 1rem; flex-shrink: 0;
+        }
+        .lightbox-btn {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            background-color: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: 0.75rem; padding: 0.8rem;
+            font-size: 1rem; font-weight: 500; color: var(--text-color);
+        }
+         .lightbox-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .lightbox-btn i { font-size: 1.25rem; }
+        #btn-get { grid-area: get; }
+        #btn-save { grid-area: save; }
+        #btn-copy { grid-area: copy; }
+        #btn-save.saved { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="app-shell">
+        <!-- ===== MAIN SCREEN ===== -->
+        <div id="main-screen" class="screen active">
+            <header class="app-header">
+                <a href="https://saba.netlify.app" class="back-link" title="Go Home"><i class='bx bx-chevron-left'></i></a>
+                <h2>Gen-Img</h2>
+                <div class="header-actions">
+                    <button class="icon-btn" id="clear-btn" title="Clear Images"><i class='bx bx-trash'></i></button>
+                    <button class="icon-btn" id="theme-toggle-btn" title="Toggle Theme"><i class='bx bx-moon'></i></button>
+                </div>
+            </header>
+
+            <main class="app-content">
+                <div class="prompt-card">
+                    <textarea id="prompt-textarea" placeholder="Describe Img here" rows="4"></textarea>
+                    <button class="icon-btn" id="shuffle-btn" title="Random Prompt"><i class='bx bx-shuffle'></i></button>
+                    <div class="prompt-actions">
+                        <div class="prompt-options">
+                            <select id="style-selector">
+                                <option value="">Style</option>
+                                <option value="cinematic">Cinematic</option>
+                                <option value="doodle">Doodle</option>
+                                <option value="photographic">Photographic</option>
+                                <option value="anime">Anime</option>
+                                <option value="fantasy art">Fantasy</option>
+                            </select>
+                            <select id="count-selector">
+                                <option value="1">1 Img</option>
+                                <option value="2">2 Imgs</option>
+                            </select>
+                        </div>
+                        <button class="icon-btn" id="send-btn" title="Generate"><i class='bx bxs-magic-wand'></i></button>
+                    </div>
+                </div>
+                <div class="gallery" id="gallery"></div>
+            </main>
+        </div>
+
+        <!-- ===== LIGHTBOX SCREEN ===== -->
+        <div id="lightbox-screen" class="screen">
+            <header class="app-header">
+                <button class="icon-btn" id="lightbox-back-btn" title="Back to Gallery"><i class='bx bx-chevron-left'></i></button>
+                <h2 id="lightbox-title">Image Preview</h2>
+                <div class="header-actions"><div style="width: 24px;"></div></div>
+            </header>
+            <div class="lightbox-preview">
+                <div class="lightbox-preview-content" id="lightbox-preview-content"></div>
+            </div>
+            <div class="lightbox-actions">
+                <button class="lightbox-btn" id="btn-get"><i class='bx bxs-download'></i>Get</button>
+                <button class="lightbox-btn" id="btn-save"><i class='bx bxs-bookmark'></i>Save</button>
+                <button class="lightbox-btn" id="btn-copy" disabled title="Feature coming soon"><i class='bx bx-copy'></i>Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CONFIGURATION ---
+            const API_KEY = "I0nQ7Y6Vv4BLX6lQz89oA1DApmFx9xDc"; // Replace with your own free key from deepinfra.com if this one stops working.
+            const API_ENDPOINT = "https://api.deepinfra.com/v1/openai/images/generations";
+            const MODEL = "stabilityai/sd3.5";
+            const HISTORY_KEY = 'gen-img-history-v2';
+            const SAVED_KEY = 'gen-img-saved-v2';
+            const THEME_KEY = 'gen-img-theme-v2';
+            const RANDOM_PROMPTS = [ "A robot tending a zen garden on Mars", "A library inside a giant, ancient tree", "A city built on the back of a sleeping dragon", "A glowing mushroom forest at night", "A steampunk airship navigating a storm of clouds"];
+
+            // --- DOM ELEMENTS ---
+            const elements = {
+                mainScreen: document.getElementById('main-screen'),
+                lightboxScreen: document.getElementById('lightbox-screen'),
+                themeToggleBtn: document.getElementById('theme-toggle-btn'),
+                gallery: document.getElementById('gallery'),
+                promptTextarea: document.getElementById('prompt-textarea'),
+                styleSelector: document.getElementById('style-selector'),
+                countSelector: document.getElementById('count-selector'),
+                sendBtn: document.getElementById('send-btn'),
+                shuffleBtn: document.getElementById('shuffle-btn'),
+                clearBtn: document.getElementById('clear-btn'),
+                lightboxBackBtn: document.getElementById('lightbox-back-btn'),
+                lightboxTitle: document.getElementById('lightbox-title'),
+                lightboxPreviewContent: document.getElementById('lightbox-preview-content'),
+                btnGet: document.getElementById('btn-get'),
+                btnSave: document.getElementById('btn-save'),
+                btnCopy: document.getElementById('btn-copy'),
+            };
+
+            let generationHistory = [];
+            let savedImages = [];
+            
+            // --- CORE LOGIC ---
+            async function handleGeneration() {
+                if (!API_KEY) {
+                    alert("API key is missing!");
+                    return;
+                }
+                const basePrompt = elements.promptTextarea.value.trim();
+                if (!basePrompt) return;
+
+                const style = elements.styleSelector.value;
+                const count = parseInt(elements.countSelector.value, 10);
+                const finalPrompt = style ? `${basePrompt}, ${style} style` : basePrompt;
+                
+                toggleFormState(true);
+
+                const generationBlock = createGenerationBlock(finalPrompt, count);
+                elements.gallery.prepend(generationBlock);
+
+                const promises = Array.from({ length: count }, () => 
+                    fetch(API_ENDPOINT, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                        body: JSON.stringify({
+                            prompt: finalPrompt,
+                            model: MODEL,
+                            response_format: "b64_json"
+                        })
+                    }).then(res => res.json())
+                );
+                
+                try {
+                    const results = await Promise.all(promises);
+                    const newImages = results
+                        .filter(r => r.data && r.data[0] && r.data[0].b64_json)
+                        .map(r => ({
+                            url: 'data:image/png;base64,' + r.data[0].b64_json,
+                            prompt: finalPrompt
+                        }));
+
+                    if (newImages.length === 0) {
+                        const errorMsg = results[0]?.error?.message || "API failed to generate images.";
+                        throw new Error(errorMsg);
+                    }
+
+                    updateGenerationBlock(generationBlock, newImages);
+                    generationHistory.push({ prompt: finalPrompt, images: newImages });
+                    saveHistory();
+                } catch (error) {
+                    console.error(error);
+                    generationBlock.innerHTML = `<p style="color:red; padding: 1rem;">Error: ${error.message}</p>`;
+                } finally {
+                    toggleFormState(false);
+                }
+            }
+            
+            // --- UI & RENDERING ---
+            function createGenerationBlock(prompt, count) {
+                const block = document.createElement('div');
+                block.className = 'generation-block';
+                const grid = document.createElement('div');
+                grid.className = 'gallery-grid';
+                const layouts = getLayoutsForCount(count);
+                for (let i = 0; i < count; i++) {
+                    const item = document.createElement('div');
+                    item.className = `gallery-item ${layouts[i]}`;
+                    item.innerHTML = '<div class="skeleton-loader"></div>';
+                    grid.appendChild(item);
+                }
+                block.appendChild(grid);
+                return block;
+            }
+
+            function updateGenerationBlock(block, images) {
+                const grid = block.querySelector('.gallery-grid');
+                grid.innerHTML = '';
+                const layouts = getLayoutsForCount(images.length);
+                images.forEach((imgData, i) => {
+                    const item = document.createElement('div');
+                    item.className = `gallery-item ${layouts[i]}`;
+                    item.innerHTML = `<img src="${imgData.url}" alt="${imgData.prompt}">`;
+                    item.addEventListener('click', () => showLightbox(imgData.url, imgData.prompt));
+                    grid.appendChild(item);
+                });
+            }
+
+            function getLayoutsForCount(count) {
+                if (count === 1) return ['full-width'];
+                return Array(count).fill('half-width');
+            }
+
+            function showLightbox(url, prompt) {
+                elements.lightboxPreviewContent.innerHTML = `<img src="${url}" alt="${prompt}">`;
+                elements.lightboxTitle.textContent = "Image Preview";
+                elements.mainScreen.classList.remove('active');
+                elements.lightboxScreen.classList.add('active');
+                elements.btnGet.dataset.url = url;
+                elements.btnSave.dataset.url = url;
+                elements.btnSave.dataset.prompt = prompt;
+                updateSaveButtonState(url);
+            }
+            
+            function hideLightbox() {
+                elements.lightboxScreen.classList.remove('active');
+                elements.mainScreen.classList.add('active');
+            }
+
+            function toggleFormState(isLoading) {
+                elements.sendBtn.disabled = isLoading;
+                elements.promptTextarea.disabled = isLoading;
+                elements.sendBtn.innerHTML = isLoading ? `<i class='bx bx-loader-alt bx-spin'></i>` : `<i class='bx bxs-magic-wand'></i>`;
+            }
+
+            async function downloadImage(url) {
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `gen-img-${Date.now()}.png`;
+                link.click();
+            }
+
+            function saveImage(url, prompt) {
+                const existingIndex = savedImages.findIndex(img => img.url === url);
+                if (existingIndex > -1) {
+                    savedImages.splice(existingIndex, 1);
+                } else {
+                    savedImages.push({ url, prompt });
+                }
+                localStorage.setItem(SAVED_KEY, JSON.stringify(savedImages));
+                updateSaveButtonState(url);
+            }
+            
+            function updateSaveButtonState(url) {
+                const isSaved = savedImages.some(img => img.url === url);
+                elements.btnSave.classList.toggle('saved', isSaved);
+                elements.btnSave.innerHTML = isSaved ? "<i class='bx bxs-bookmark-star'></i>Saved" : "<i class='bx bxs-bookmark'></i>Save";
+            }
+
+            function saveHistory() {
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(generationHistory));
+            }
+
+            function loadData() {
+                const historyData = localStorage.getItem(HISTORY_KEY);
+                const savedData = localStorage.getItem(SAVED_KEY);
+                if (historyData) {
+                    generationHistory = JSON.parse(historyData);
+                    generationHistory.forEach(blockData => {
+                        const block = createGenerationBlock(blockData.prompt, blockData.images.length);
+                        updateGenerationBlock(block, blockData.images);
+                        elements.gallery.prepend(block);
+                    });
+                }
+                if (savedData) {
+                    savedImages = JSON.parse(savedData);
+                }
+            }
+            
+            function clearHistory() {
+                if(confirm('This will clear all generated images from this session. Are you sure?')) {
+                    generationHistory = [];
+                    localStorage.removeItem(HISTORY_KEY);
+                    elements.gallery.innerHTML = '';
+                }
+            }
+
+            function setTheme(theme) {
+                document.body.dataset.theme = theme;
+                localStorage.setItem(THEME_KEY, theme);
+                elements.themeToggleBtn.innerHTML = theme === 'dark' ? "<i class='bx bx-sun'></i>" : "<i class='bx bx-moon'></i>";
+            }
+            function toggleTheme() {
+                const newTheme = (document.body.dataset.theme || 'light') === 'light' ? 'dark' : 'light';
+                setTheme(newTheme);
+            }
+            
+            elements.sendBtn.addEventListener('click', handleGeneration);
+            elements.shuffleBtn.addEventListener('click', () => {
+                elements.promptTextarea.value = RANDOM_PROMPTS[Math.floor(Math.random() * RANDOM_PROMPTS.length)];
+            });
+            elements.clearBtn.addEventListener('click', clearHistory);
+            elements.themeToggleBtn.addEventListener('click', toggleTheme);
+            elements.lightboxBackBtn.addEventListener('click', hideLightbox);
+            elements.btnGet.addEventListener('click', (e) => downloadImage(e.currentTarget.dataset.url));
+            elements.btnSave.addEventListener('click', (e) => saveImage(e.currentTarget.dataset.url, e.currentTarget.dataset.prompt));
+            
+            setTheme(localStorage.getItem(THEME_KEY) || 'light');
+            loadData();
+        });
+    </script>
+</body>
+</html>
