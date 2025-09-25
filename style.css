@@ -6,39 +6,40 @@
 /* --- START OF COMPLETE style.css --- */
 
 :root {
-    --bg-color: #f7f7f8;
+    --bg-color: #fffafb; /* ultra light blush */
     --widget-bg-color: #ffffff;
-    --text-color: #1c1c1e;
-    --secondary-text-color: #6d6d72;
-    --border-color: #e5e5ea;
-    --accent-color-start: #7a60ff;
-    --accent-color-end: #5135d4;
-    --user-message-bg: #5135d4;
+    --text-color: #26141a; /* deep rosy brown */
+    --secondary-text-color: #b0808f; /* muted flamingo mauve */
+    --border-color: #f7d6e0; /* pastel pink border */
+    --accent-color-start: #ffb6c1; /* light flamingo pink */
+    --accent-color-end: #ff6f91;   /* stronger flamingo */
+    --user-message-bg: #ff6f91; /* flamingo pink bubble */
     --user-message-color: #ffffff;
-    --ai-message-bg: #fdfdf6; /* MODIFIED: No background for AI messages */
-    --button-bg: #f4f4f5;
-    --button-hover-bg: #e9e9eb;
-    --font-family: 'Comfortaa', sans-serif; /* MODIFIED: Font changed */
-    --shadow-color: rgba(0, 0, 0, 0.07);
+    --ai-message-bg: #fff0f5; /* blush tint */
+    --button-bg: #ffe6ef;
+    --button-hover-bg: #ffd3e2;
+    --font-family: 'Comfortaa', sans-serif;
+    --shadow-color: rgba(255, 111, 145, 0.15); /* pink glow */
     --modal-overlay-color: rgba(0, 0, 0, 0.4);
-    --code-bg-color: #282c34;
+    --code-bg-color: #3a1f2a; /* dark rosewood */
     --transition-speed: 0.25s;
     --transition-easing: ease-in-out;
-    --icon-a: black;
+    --icon-a: #ff6f91;
 }
+
 body[data-theme="dark"] {
-    --bg-color: #1c1c1e;
-    --widget-bg-color: #2c2c2e;
-    --text-color: #f2f2f7;
-    --secondary-text-color: #8e8e93;
-    --border-color: #3a3a3c;
-    --user-message-bg: #7a60ff;
-    --ai-message-bg: #252525; /* MODIFIED: No background for AI messages */
-    --button-bg: #3a3a3c;
-    --button-hover-bg: #48484a;
+    --bg-color: #1e1216; /* deep plum */
+    --widget-bg-color: #2a1a20;
+    --text-color: #ffe9f0; /* pale pink white */
+    --secondary-text-color: #ff99b6; /* soft neon pink */
+    --border-color: #3a2028;
+    --user-message-bg: #ffb6c1; /* lighter flamingo */
+    --ai-message-bg: #2a1a20;
+    --button-bg: #3a2028;
+    --button-hover-bg: #4a2b35;
     --shadow-color: rgba(0, 0, 0, 0.25);
     --modal-overlay-color: rgba(0, 0, 0, 0.6);
-    --icon-a: white;
+    --icon-a: #ffb6c1;
 }
 * {
     box-sizing: border-box;
