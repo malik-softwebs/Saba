@@ -1,83 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XTest</title>
-<meta name="theme-color" content="#4949e7">
-
-<!-- Inline Manifest -->
-<link rel="manifest" href="data:application/manifest+json,{
-  &quot;name&quot;: &quot;XTest&quot;,
-  &quot;short_name&quot;: &quot;XTest&quot;,
-  &quot;start_url&quot;: &quot;.&quot;,
-  &quot;display&quot;: &quot;standalone&quot;,
-  &quot;background_color&quot;: &quot;#4949e7&quot;,
-  &quot;theme_color&quot;: &quot;#4949e7&quot;,
-  &quot;icons&quot;: [
-    { &quot;src&quot;: &quot;https://ideogram.ai/assets/progressive-image/fast/response/G4DMH_ZIQt2YQoAsKFIGGg&quot;, &quot;sizes&quot;: &quot;512x512&quot;, &quot;type&quot;: &quot;image/png&quot; }
-  ]
-}">
-
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #4949e7, #3030c7);
-    color: white;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin: 0;
-  }
-  .box {
-    background: rgba(255, 255, 255, 0.12);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    width: 300px;
-  }
-  button {
-    margin: 8px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  #yesBtn { background: #4CAF50; color: white; }
-  #noBtn { background: #f44336; color: white; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XTest</title>
+  <meta name="theme-color" content="#4949e7">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4949e7, #3030c7);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .box {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 320px;
+    }
+    button {
+      margin: 8px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #yesBtn { background: #4CAF50; color: white; }
+    #noBtn { background: #f44336; color: white; }
+  </style>
 </head>
 <body>
 
 <div class="box">
   <h2 id="title">Checking installation...</h2>
   <p id="desc">Please wait a second.</p>
-  <div id="buttons" >
+  <div id="buttons" style="display:none;">
     <button id="yesBtn">Yes, Install</button>
     <button id="noBtn">No, Thanks</button>
   </div>
 </div>
 
 <script>
-// Inline service worker setup
 if ('serviceWorker' in navigator) {
-  const swCode = `
-    self.addEventListener('install', e => self.skipWaiting());
-    self.addEventListener('fetch', e => {});
-  `;
-  const blob = new Blob([swCode], { type: 'text/javascript' });
-  navigator.serviceWorker.register(URL.createObjectURL(blob))
-  .catch(err => console.error('SW failed', err));
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(err => console.error('SW error', err));
 }
 
 let deferredPrompt;
 
 function isPWA() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true;
 }
 
 function updateStatus(title, desc) {
