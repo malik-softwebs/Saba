@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XTest</title>
+<meta name="theme-color" content="#4949e7">
+
+<!-- Inline Manifest -->
+<link rel="manifest" href="data:application/manifest+json,{
+  &quot;name&quot;: &quot;XTest&quot;,
+  &quot;short_name&quot;: &quot;XTest&quot;,
+  &quot;start_url&quot;: &quot;.&quot;,
+  &quot;display&quot;: &quot;standalone&quot;,
+  &quot;background_color&quot;: &quot;#4949e7&quot;,
+  &quot;theme_color&quot;: &quot;#4949e7&quot;,
+  &quot;icons&quot;: [
+    { &quot;src&quot;: &quot;https://ideogram.ai/assets/progressive-image/fast/response/G4DMH_ZIQt2YQoAsKFIGGg&quot;, &quot;sizes&quot;: &quot;512x512&quot;, &quot;type&quot;: &quot;image/png&quot; }
+  ]
+}">
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4949e7, #3030c7);
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 0;
+  }
+  .box {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    width: 300px;
+  }
+  button {
+    margin: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #yesBtn { background: #4CAF50; color: white; }
+  #noBtn { background: #f44336; color: white; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2 id="title">Checking installation...</h2>
+  <p id="desc">Please wait a second.</p>
+  <div id="buttons" >
+    <button id="yesBtn">Yes, Install</button>
+    <button id="noBtn">No, Thanks</button>
+  </div>
+</div>
+
+<script>
+// Inline service worker setup
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('fetch', e => {});
+  `;
+  const blob = new Blob([swCode], { type: 'text/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(blob))
+  .catch(err => console.error('SW failed', err));
+}
+
+let deferredPrompt;
+
+function isPWA() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function updateStatus(title, desc) {
+  document.getElementById('title').innerText = title;
+  document.getElementById('desc').innerText = desc || '';
+}
+
+if (isPWA()) {
+  updateStatus('✅ XTest Installed', 'You are running this app as a PWA.');
+} else {
+  updateStatus('🌐 Browser Mode', 'You can install XTest for a better experience.');
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('buttons').style.display = 'block';
+  updateStatus('Install XTest?', 'Would you like to add this app to your device?');
+});
+
+document.getElementById('yesBtn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === 'accepted') {
+      updateStatus('🎉 Installed Successfully!', 'You can now open XTest from your home screen.');
+    } else {
+      updateStatus('❌ Cancelled', 'You chose not to install.');
+    }
+    deferredPrompt = null;
+    document.getElementById('buttons').style.display = 'none';
+  } else {
+    alert('Installation not supported or already installed.');
+  }
+});
+
+document.getElementById('noBtn').addEventListener('click', () => {
+  updateStatus('Maybe Later', 'You can install XTest anytime from your browser menu.');
+  document.getElementById('buttons').style.display = 'none';
+});
+</script>
+
+</body>
+</html>
