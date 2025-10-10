@@ -1,8 +1,9 @@
-// Simple service worker with offline support
+// Simple service worker for XTest (with offline support)
 const CACHE_NAME = 'xtest-cache-v1';
 const URLS_TO_CACHE = [
   './',
   './index.html',
+  './x.html',
   './manifest.json'
 ];
 
@@ -29,5 +30,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then(response => response || fetch(event.request))
+      .catch(() => caches.match('./index.html'))
   );
 });
