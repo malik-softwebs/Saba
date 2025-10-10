@@ -1,11 +1,11 @@
 {
   "name": "XTest",
   "short_name": "XTest",
-  "start_url": "./",
+  "start_url": "x.html",
   "display": "standalone",
   "background_color": "#4949e7",
   "theme_color": "#4949e7",
-  "description": "Demo Progressive Web App for XTest.",
+  "description": "Progressive Web App for XTest.",
   "icons": [
     {
       "src": "https://ideogram.ai/assets/progressive-image/fast/response/G4DMH_ZIQt2YQoAsKFIGGg",
