@@ -172,6 +172,29 @@
       clickCount = 0; // reset so it works again if user clicks twice later
     }
   });
+// Prevent pull-to-refresh (especially on mobile browsers)
+let maybePreventPullToRefresh = false;
+let lastTouchY = 0;
+
+window.addEventListener('touchstart', (e) => {
+  if (e.touches.length !== 1) return;
+  lastTouchY = e.touches[0].clientY;
+  maybePreventPullToRefresh = window.pageYOffset === 0;
+});
+
+window.addEventListener('touchmove', (e) => {
+  const touchY = e.touches[0].clientY;
+  const touchYDelta = touchY - lastTouchY;
+  lastTouchY = touchY;
+
+  if (maybePreventPullToRefresh) {
+    maybePreventPullToRefresh = false;
+    if (touchYDelta > 0) {
+      e.preventDefault();
+      return;
+    }
+  }
+}, { passive: false });
 </script>
     <script>document.getElementById('message-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.stopImmediatePropagation(); document.getElementById('message-input').dispatchEvent(new Event('input')); } }, true);</script>
     
