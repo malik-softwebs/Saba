@@ -6,40 +6,40 @@
 /* --- START OF COMPLETE style.css --- */
 
 :root {
-    --bg-color: #f6fff6; /* soft greenish white */
+    --bg-color: #f8f6fb; /* pale lavender white */
     --widget-bg-color: #ffffff;
-    --text-color: #142c14; /* deep turf green */
-    --secondary-text-color: #507250; /* muted field green */
-    --border-color: #c9e4c9; /* light grass tint */
-    --accent-color-start: #28a745; /* field green */
-    --accent-color-end: #0b6623;   /* darker pitch green */
-    --user-message-bg: #0b6623; /* dark green bubble */
+    --text-color: #2c2b30; /* soft dark */
+    --secondary-text-color: #6f6d7a; /* muted violet gray */
+    --border-color: #e5e3ee;
+    --accent-color-start: #b47aff; /* dusk violet */
+    --accent-color-end: #ffb3b3;   /* blush rose */
+    --user-message-bg: #b47aff; /* violet */
     --user-message-color: #ffffff;
-    --ai-message-bg: #f1fff1; /* soft green tint */
-    --button-bg: #d9f5d9;
-    --button-hover-bg: #b9ecb9;
+    --ai-message-bg: #fdfaff; /* near white lilac */
+    --button-bg: #f2edf9;
+    --button-hover-bg: #e9e1f4;
     --font-family: 'Comfortaa', sans-serif;
-    --shadow-color: rgba(11, 102, 35, 0.15);
+    --shadow-color: rgba(0, 0, 0, 0.08);
     --modal-overlay-color: rgba(0, 0, 0, 0.4);
-    --code-bg-color: #1b3a1b;
+    --code-bg-color: #2e2938;
     --transition-speed: 0.25s;
     --transition-easing: ease-in-out;
-    --icon-a: #0b6623;
+    --icon-a: #4a3a68;
 }
 
 body[data-theme="dark"] {
-    --bg-color: #0b1410; /* dark pitch */
-    --widget-bg-color: #16281b;
-    --text-color: #e9f6e9; /* pale green-white */
-    --secondary-text-color: #85b985;
-    --border-color: #1f3b26;
-    --user-message-bg: #28a745; /* bright turf green */
-    --ai-message-bg: #16281b;
-    --button-bg: #1f3b26;
-    --button-hover-bg: #285034;
+    --bg-color: #1b1821; /* deep violet gray */
+    --widget-bg-color: #262230;
+    --text-color: #eae5f7; /* pale lavender */
+    --secondary-text-color: #a195b8;
+    --border-color: #312a3c;
+    --user-message-bg: #b47aff;
+    --ai-message-bg: #201c27;
+    --button-bg: #312a3c;
+    --button-hover-bg: #3a3347;
     --shadow-color: rgba(0, 0, 0, 0.25);
     --modal-overlay-color: rgba(0, 0, 0, 0.6);
-    --icon-a: #28a745;
+    --icon-a: #b47aff;
 }
 * {
     box-sizing: border-box;
