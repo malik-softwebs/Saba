@@ -24,7 +24,7 @@
 
 
 
-    <style>a.icon-btn{color:var(--secondary-text-color)}</style><script>document.addEventListener("DOMContentLoaded",()=>{let e=document.createElement("a");e.href="http://action_notifications",e.className="icon-btn",e.title="View Notifications",e.setAttribute("aria-label","View notifications"),e.innerHTML="<i class='bx bx-bell'></i>",document.querySelector(".header-actions")?.prepend(e)});</script>
+    
     <style>.setting-link{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;text-decoration:none;color:var(--text-color)}.setting-link i{font-size:24px;color:var(--secondary-text-color)}</style><script>document.addEventListener("DOMContentLoaded",()=>{const e=document.createElement("a");e.href="http://action_share",e.className="setting-link",e.innerHTML="<span>Share this app</span><i class='bx bx-share'></i>";const t=document.querySelector(".modal-content"),n=document.querySelector(".avatar-selection");t&&n?t.insertBefore(e,n):t?.appendChild(e)});</script>
     <!-- Highlight.js for Code Syntax Highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -33,7 +33,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="light" >
-<script type="text/javascript">
+
+    <div class="chat-widget" role="application">
+        <header class="chat-header">
+            <script type="text/javascript">
 	atOptions = {
 		'key' : 'f72c81dbb8bf846eb6404de60e7fa9ee',
 		'format' : 'iframe',
@@ -43,9 +46,6 @@
 	};
 </script>
 <script type="text/javascript" src="//www.highperformanceformat.com/f72c81dbb8bf846eb6404de60e7fa9ee/invoke.js"></script>
-    <div class="chat-widget" role="application">
-        <header class="chat-header">
-            
             <h2 id="chat-title">SABA</h2>
             <div class="header-actions">
                 <button class="icon-btn" id="clear-chat-btn" title="Clear Chat History" aria-label="Clear all messages">
