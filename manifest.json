@@ -1,14 +1,20 @@
 {
-  "name": "XTest",
-  "short_name": "XTest",
-  "start_url": "x.html",
+  "name": "SABA",
+  "short_name": "SABA",
+  "description": "Your Smart And Better-choice Assistant by Malik Softwebs.",
+  "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#4949e7",
-  "theme_color": "#4949e7",
-  "description": "Progressive Web App for XTest.",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://ideogram.ai/assets/progressive-image/fast/response/G4DMH_ZIQt2YQoAsKFIGGg",
+      "src": "https://i.ibb.co/KxHVdzfx/file-00000000b61061fb9d0784839d8d1309.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/KxHVdzfx/file-00000000b61061fb9d0784839d8d1309.png",
       "sizes": "512x512",
       "type": "image/png"
     }
