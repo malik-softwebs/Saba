@@ -6,40 +6,40 @@
 /* --- START OF COMPLETE style.css --- */
 
 :root {
-    --bg-color: #fffafb; /* ultra light blush */
+    --bg-color: #f6fff6; /* soft greenish white */
     --widget-bg-color: #ffffff;
-    --text-color: #26141a; /* deep rosy brown */
-    --secondary-text-color: #b0808f; /* muted flamingo mauve */
-    --border-color: #f7d6e0; /* pastel pink border */
-    --accent-color-start: #ffb6c1; /* light flamingo pink */
-    --accent-color-end: #ff6f91;   /* stronger flamingo */
-    --user-message-bg: #ff6f91; /* flamingo pink bubble */
+    --text-color: #142c14; /* deep turf green */
+    --secondary-text-color: #507250; /* muted field green */
+    --border-color: #c9e4c9; /* light grass tint */
+    --accent-color-start: #28a745; /* field green */
+    --accent-color-end: #0b6623;   /* darker pitch green */
+    --user-message-bg: #0b6623; /* dark green bubble */
     --user-message-color: #ffffff;
-    --ai-message-bg: #fff0f5; /* blush tint */
-    --button-bg: #ffe6ef;
-    --button-hover-bg: #ffd3e2;
+    --ai-message-bg: #f1fff1; /* soft green tint */
+    --button-bg: #d9f5d9;
+    --button-hover-bg: #b9ecb9;
     --font-family: 'Comfortaa', sans-serif;
-    --shadow-color: rgba(255, 111, 145, 0.15); /* pink glow */
+    --shadow-color: rgba(11, 102, 35, 0.15);
     --modal-overlay-color: rgba(0, 0, 0, 0.4);
-    --code-bg-color: #3a1f2a; /* dark rosewood */
+    --code-bg-color: #1b3a1b;
     --transition-speed: 0.25s;
     --transition-easing: ease-in-out;
-    --icon-a: #ff6f91;
+    --icon-a: #0b6623;
 }
 
 body[data-theme="dark"] {
-    --bg-color: #1e1216; /* deep plum */
-    --widget-bg-color: #2a1a20;
-    --text-color: #ffe9f0; /* pale pink white */
-    --secondary-text-color: #ff99b6; /* soft neon pink */
-    --border-color: #3a2028;
-    --user-message-bg: #ffb6c1; /* lighter flamingo */
-    --ai-message-bg: #2a1a20;
-    --button-bg: #3a2028;
-    --button-hover-bg: #4a2b35;
+    --bg-color: #0b1410; /* dark pitch */
+    --widget-bg-color: #16281b;
+    --text-color: #e9f6e9; /* pale green-white */
+    --secondary-text-color: #85b985;
+    --border-color: #1f3b26;
+    --user-message-bg: #28a745; /* bright turf green */
+    --ai-message-bg: #16281b;
+    --button-bg: #1f3b26;
+    --button-hover-bg: #285034;
     --shadow-color: rgba(0, 0, 0, 0.25);
     --modal-overlay-color: rgba(0, 0, 0, 0.6);
-    --icon-a: #ffb6c1;
+    --icon-a: #28a745;
 }
 * {
     box-sizing: border-box;
