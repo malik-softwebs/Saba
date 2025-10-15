@@ -5,7 +5,7 @@
 
     // --- 1. CONFIGURATION & STATE ---
     const Config = {
-        API_URL: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAdw6ih3wCgG3XVMV5MsVk2Nvwz1iBbqp0`, // IMPORTANT: Add your Gemini Key from ```AIzaSyBV3tdBWu8sCl0V7bDEy1ODRKcvA1nqUls```
+        API_URL: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyAdw6ih3wCgG3XVMV5MsVk2Nvwz1iBbqp0`, // IMPORTANT: Add your Gemini Key from ```AIzaSyBV3tdBWu8sCl0V7bDEy1ODRKcvA1nqUls```
         
         // --- NEW API KEYS (REPLACE THESE WITH YOURS) ---
         YOUTUBE_API_KEY: 'AIzaSyAMsG0CrRjfYhzSbZ1AzQopDH1YRMchc3Q',
